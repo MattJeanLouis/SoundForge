@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary-600 hover:bg-secondary-700 focus:ring-secondary-500;
+  }
+
+  .btn-outline {
+    @apply border-gray-300 text-gray-700 bg-white hover:bg-gray-50;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200;
+  }
+
+  .input {
+    @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-gray-700;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 rounded-full hover:bg-gray-500;
+}
+
+/* Game-specific animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    filter: brightness(100%);
+  }
+  50% {
+    filter: brightness(120%);
+  }
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Music card styles */
+.music-card {
+  @apply relative overflow-hidden rounded-lg transition-all duration-300 hover:scale-105;
+}
+
+.music-card::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-300;
+}
+
+.music-card:hover::before {
+  @apply opacity-100;
+}
+
+/* Studio item styles */
+.studio-item {
+  @apply relative overflow-hidden rounded-lg transition-all duration-300;
+}
+
+.studio-item::after {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-br from-primary-500/20 to-secondary-500/20 opacity-0 transition-opacity duration-300;
+}
+
+.studio-item:hover::after {
+  @apply opacity-100;
+}
+
+/* Game event styles */
+.event-card {
+  @apply relative overflow-hidden rounded-lg border-2 border-transparent transition-all duration-300;
+}
+
+.event-card::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-r from-primary-500/10 to-secondary-500/10 opacity-0 transition-opacity duration-300;
+}
+
+.event-card:hover::before {
+  @apply opacity-100;
+}
+
+.event-card.active {
+  @apply border-primary-500;
+}

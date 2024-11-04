@@ -1,0 +1,24 @@
+{
+  "name": "soundcloud-api",
+  "version": "1.0.0",
+  "description": "A Node.js wrapper around the Soundcloud API.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jkup/soundcloud-api.git"
+  },
+  "keywords": [
+    "soundcloud",
+    "api",
+    "node"
+  ],
+  "author": "Jon Kuperman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jkup/soundcloud-api/issues"
+  },
+  "homepage": "https://github.com/jkup/soundcloud-api#readme"
+}
