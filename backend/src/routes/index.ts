@@ -4,6 +4,7 @@ import trackRoutes from './track.routes';
 import eventRoutes from './event.routes';
 import studioRoutes from './studio.routes';
 import transactionRoutes from './transaction.routes';
+import authRoutes from './auth.routes';
 
 const router = Router();
 
@@ -11,6 +12,9 @@ const router = Router();
 router.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
+
+// Auth routes
+router.use('/auth', authRoutes);
 
 // API routes
 router.use('/users', userRoutes);

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { User, Track, StudioItem, GameEvent } from '../services/mockData';
 import * as mockApi from '../services/mockData';
+import AuthService from '../services/authService';
 
 interface GameStore {
   // State
@@ -9,6 +10,7 @@ interface GameStore {
   events: GameEvent[];
   loading: boolean;
   error: string | null;
+  isAuthenticated: boolean;
 
   // Actions
   initializeGame: () => Promise<void>;
@@ -16,6 +18,8 @@ interface GameStore {
   boostTrack: (trackId: string) => Promise<void>;
   joinEvent: (eventId: string, trackId: string) => Promise<void>;
   clearError: () => void;
+  setAuthToken: (token: string) => void;
+  logout: () => void;
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -24,6 +28,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   events: [],
   loading: false,
   error: null,
+  isAuthenticated: AuthService.isAuthenticated(),
 
   initializeGame: async () => {
     set({ loading: true, error: null });
@@ -107,4 +112,19 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   clearError: () => set({ error: null }),
+
+  setAuthToken: (token: string) => {
+    try {
+      const parsedToken = JSON.parse(atob(token));
+      AuthService.setToken(parsedToken);
+      set({ isAuthenticated: true });
+    } catch (error) {
+      set({ error: 'Invalid authentication token' });
+    }
+  },
+
+  logout: () => {
+    AuthService.removeToken();
+    set({ isAuthenticated: false, user: null });
+  },
 }));

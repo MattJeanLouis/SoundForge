@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react';
 import { Outlet, NavLink, useLocation } from 'react-router-dom';
 import { Dialog, Transition } from '@headlessui/react';
+import { useTranslation } from 'react-i18next';
 import {
   HomeIcon,
   MusicalNoteIcon,
@@ -8,20 +9,34 @@ import {
   UserIcon,
   XMarkIcon,
   Bars3Icon,
+  ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
-
-const navigation = [
-  { name: 'Dashboard', href: '/', icon: HomeIcon },
-  { name: 'Studio', href: '/studio', icon: SparklesIcon },
-  { name: 'Tracks', href: '/tracks', icon: MusicalNoteIcon },
-  { name: 'Events', href: '/events', icon: SparklesIcon },
-  { name: 'Profile', href: '/profile', icon: UserIcon },
-];
+import { useGameStore } from '../../store/gameStore';
 
 export default function Layout() {
+  const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const { isAuthenticated, logout } = useGameStore(state => ({
+    isAuthenticated: state.isAuthenticated,
+    logout: state.logout,
+  }));
+
+  const navigation = [
+    { name: t('dashboard'), href: '/', icon: HomeIcon },
+    { name: t('studio'), href: '/studio', icon: SparklesIcon },
+    { name: t('tracks'), href: '/tracks', icon: MusicalNoteIcon },
+    { name: t('events'), href: '/events', icon: SparklesIcon },
+    { name: t('profile'), href: '/profile', icon: UserIcon },
+  ];
+
+  const handleLogout = () => {
+    logout();
+    window.location.href = '/';
+  };
+
+  const navigationItems = isAuthenticated ? navigation : [navigation[0]];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -53,13 +68,13 @@ export default function Layout() {
               <Dialog.Panel className="relative mr-16 flex w-full max-w-xs flex-1">
                 <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
                   <div className="flex h-16 shrink-0 items-center">
-                    <h1 className="text-2xl font-bold text-primary-600">SoundForge</h1>
+                    <h1 className="text-2xl font-bold text-primary-600 float">SoundForge</h1>
                   </div>
                   <nav className="flex flex-1 flex-col">
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
                       <li>
                         <ul role="list" className="-mx-2 space-y-1">
-                          {navigation.map((item) => (
+                          {navigationItems.map((item) => (
                             <li key={item.name}>
                               <NavLink
                                 to={item.href}
@@ -68,7 +83,7 @@ export default function Layout() {
                                     isActive
                                       ? 'bg-gray-50 text-primary-600'
                                       : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50',
-                                    'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                                    'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold hover-lift click-scale'
                                   )
                                 }
                                 onClick={() => setSidebarOpen(false)}
@@ -88,6 +103,20 @@ export default function Layout() {
                           ))}
                         </ul>
                       </li>
+                      {isAuthenticated && (
+                        <li className="mt-auto">
+                          <button
+                            onClick={handleLogout}
+                            className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-primary-600 hover-lift click-scale w-full"
+                          >
+                            <ArrowRightOnRectangleIcon
+                              className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-primary-600"
+                              aria-hidden="true"
+                            />
+                            {t('logout')}
+                          </button>
+                        </li>
+                      )}
                     </ul>
                   </nav>
                 </div>
@@ -101,13 +130,13 @@ export default function Layout() {
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
           <div className="flex h-16 shrink-0 items-center">
-            <h1 className="text-2xl font-bold text-primary-600">SoundForge</h1>
+            <h1 className="text-2xl font-bold text-primary-600 float">SoundForge</h1>
           </div>
           <nav className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
               <li>
                 <ul role="list" className="-mx-2 space-y-1">
-                  {navigation.map((item) => (
+                  {navigationItems.map((item) => (
                     <li key={item.name}>
                       <NavLink
                         to={item.href}
@@ -117,7 +146,7 @@ export default function Layout() {
                             isActive
                               ? 'bg-gray-50 text-primary-600'
                               : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50',
-                            'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                            'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold hover-lift click-scale'
                           )
                         }
                       >
@@ -136,6 +165,20 @@ export default function Layout() {
                   ))}
                 </ul>
               </li>
+              {isAuthenticated && (
+                <li className="mt-auto">
+                  <button
+                    onClick={handleLogout}
+                    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-primary-600 hover-lift click-scale w-full"
+                  >
+                    <ArrowRightOnRectangleIcon
+                      className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-primary-600"
+                      aria-hidden="true"
+                    />
+                    {t('logout')}
+                  </button>
+                </li>
+              )}
             </ul>
           </nav>
         </div>
@@ -146,7 +189,7 @@ export default function Layout() {
         <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
           <button
             type="button"
-            className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+            className="-m-2.5 p-2.5 text-gray-700 lg:hidden hover-lift click-scale"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Open sidebar</span>

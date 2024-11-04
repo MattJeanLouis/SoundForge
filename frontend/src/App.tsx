@@ -7,7 +7,9 @@ import Studio from './pages/Studio';
 import Tracks from './pages/Tracks';
 import Events from './pages/Events';
 import Profile from './pages/Profile';
+import ProtectedRoute from './components/ProtectedRoute';
 import { useGameStore } from './store/gameStore';
+import { SparklesIcon } from '@heroicons/react/24/outline';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,20 +22,65 @@ const queryClient = new QueryClient({
 });
 
 function AppContent() {
-  const initializeGame = useGameStore(state => state.initializeGame);
+  const { initializeGame, isAuthenticated, loading } = useGameStore(state => ({
+    initializeGame: state.initializeGame,
+    isAuthenticated: state.isAuthenticated,
+    loading: state.loading,
+  }));
 
   useEffect(() => {
-    initializeGame();
-  }, [initializeGame]);
+    if (isAuthenticated) {
+      initializeGame();
+    }
+  }, [isAuthenticated, initializeGame]);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <SparklesIcon className="mx-auto h-12 w-12 animate-spin text-primary-600" />
+          <h3 className="mt-2 text-sm font-semibold text-gray-900">Loading SoundForge...</h3>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
-        <Route path="studio" element={<Studio />} />
-        <Route path="tracks" element={<Tracks />} />
-        <Route path="events" element={<Events />} />
-        <Route path="profile" element={<Profile />} />
+        <Route
+          path="studio"
+          element={
+            <ProtectedRoute>
+              <Studio />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="tracks"
+          element={
+            <ProtectedRoute>
+              <Tracks />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="events"
+          element={
+            <ProtectedRoute>
+              <Events />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
       </Route>
     </Routes>
   );
